@@ -1,0 +1,7 @@
+interface:
+  display_name: "Slack Notification Triage"
+  short_description: "Prioritize important Slack activity"
+  icon_small: "../slack/assets/slack-small.svg"
+  icon_large: "../slack/assets/slack.svg"
+  brand_color: "#611F69"
+  default_prompt: "Use $slack-notification-triage to review selected Slack channels, DMs, or topics and return a short priority list of what to look at first."
