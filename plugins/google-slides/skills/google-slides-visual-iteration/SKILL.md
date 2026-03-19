@@ -42,6 +42,7 @@ If a dedicated visual-iteration tool exists in the runtime, use it. Otherwise, e
 
 3. Start with a thumbnail.
 - Call `get_slide_thumbnail` first.
+- Fetch the thumbnail for the current slide only. Do not prefetch thumbnails for the rest of the deck before starting the current slide's edit loop.
 - Use `LARGE` when spacing, overlap, cropping, or dense layouts are the concern.
 - Treat the thumbnail as the source of truth for visual quality. Raw JSON alone is not enough.
 - When the tool returns a thumbnail artifact, image content, or image-bearing URL/data wrapper, treat that as analyzable visual input for this workflow and inspect it directly.
@@ -130,6 +131,7 @@ If the user asks to improve the whole presentation:
 3. Finish each slide before moving on.
 - For each target slide, run the full thumbnail -> diagnose -> batch_update -> re-thumbnail loop.
 - Work sequentially: finish the current slide before starting issue diagnosis for the next slide.
+- Do not fetch thumbnails for later slides while the current slide is still in progress unless the user explicitly asked for a separate audit.
 - Start each slide with an explicit list of the 2-4 key issues on that slide only.
 - Fix that slide before moving to the next one. Do not diagnose the whole rest of the deck in detail while the current slide is still unresolved.
 - End each pass with a fixed-vs-remaining issue summary for that slide only.
@@ -156,6 +158,7 @@ If the user asks to improve the whole presentation:
 
 The Slides connector exposes raw `batch_update` requests. That means:
 - Always inspect the current slide before editing.
+- Keep the tool loop local to the current slide: one slide thumbnail in, one slide edit pass, one verification thumbnail out.
 - Use object IDs from the live slide state, not guessed IDs.
 - Prefer reversible, geometric edits first: transform, size, alignment, deletion only when clearly safe.
 - If a text box is too dense, try resizing, redistributing, or reflowing the slide before shortening the text.
