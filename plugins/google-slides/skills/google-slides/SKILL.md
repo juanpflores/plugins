@@ -41,7 +41,9 @@ Confirm the runtime exposes the relevant Google Slides actions before editing:
 - For topic asks such as "find the slide that explains churn," do not rely on exact keyword hits alone. Use deck structure, section headers, overview slides, and nearby slide numbers to identify the full relevant section.
 - When a topic appears as a contiguous section, inspect that full section or a tight local window around the section entry before answering. Do not stop after the first matching slide.
 - Keep topic-retrieval bounded. After you inspect the most relevant local section, usually about 3-7 slides, stop gathering more slides unless the evidence is still conflicting and synthesize the answer from that section.
+- After a successful `get_presentation_text` read, stay on the Google Slides tool path. The next step for topic retrieval should be `get_slide` on the candidate section and then `get_slide_thumbnail` for low-text or visual slides, not generic code execution.
 - Use `get_presentation_text` to find candidate slides, then inspect the relevant slides with `get_slide`. If a relevant slide is chart-led, image-led, or has sparse text, you must inspect it with `get_slide_thumbnail` before answering.
+- Do not use `js_repl`, Python, or raw MCP tool names to search or post-process deck text for slide retrieval. In `codex exec`, those detours can fail or hang instead of completing the Slides workflow.
 - Use `get_slide` before any slide-level write so object IDs and layout context come from the live deck.
 - For slide summaries or inspection, do not rely on text extraction alone when a slide contains charts, graphs, screenshots, diagrams, or image-heavy content.
 - Treat low-text slides inside a relevant section as potentially chart-led or image-led evidence, not irrelevant slides. If a candidate slide or its neighbors have sparse extracted text, you must fetch a thumbnail before excluding them.
