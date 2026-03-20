@@ -312,7 +312,7 @@ The `v0Tools` export includes 20+ tools: `createChat`, `sendMessage`, `getChat`,
 
 ## MCP Server
 
-Connect v0 to any MCP-compatible IDE (Cursor, Claude Desktop, etc.):
+Connect v0 to any MCP-compatible IDE or agent (Cursor, Codex, VS Code, etc.):
 
 ```json
 {
@@ -503,7 +503,7 @@ const { text } = await agent.generateText({
 v0 has native support for these services in its sandbox:
 
 - **Databases**: Neon (PostgreSQL), Supabase, Upstash Redis, Vercel Blob
-- **AI**: OpenAI, Anthropic, Groq, Grok, fal, Deep Infra (via Vercel AI Gateway)
+- **AI**: OpenAI, Google, Groq, Grok, fal, Deep Infra (via Vercel AI Gateway)
 - **Payments**: Stripe
 - **External APIs**: Twilio, and others via the "Vars" panel
 

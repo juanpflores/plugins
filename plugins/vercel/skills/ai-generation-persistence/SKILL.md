@@ -63,10 +63,10 @@ metadata:
       - "nanoid"
       - "cuid"
       - "openai"
-      - "anthropic"
+      - "gemini"
       - "llm"
       - "gpt"
-      - "claude"
+      - "codex"
     noneOf:
       - "github actions"
       - "ci workflow"

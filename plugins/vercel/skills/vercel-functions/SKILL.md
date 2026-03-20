@@ -32,11 +32,11 @@ validate:
     message: 'NextApiRequest/NextApiResponse are Pages Router types — use Web API Request/Response'
     severity: error
   -
-    pattern: 'from\s+[''"](openai|@anthropic-ai/sdk|anthropic)[''"]|new\s+(OpenAI|Anthropic)\('
+    pattern: 'from\s+[''"](openai|@google/genai|@google/generative-ai)[''"]|new\s+(OpenAI|GoogleGenAI|GoogleGenerativeAI)\('
     message: 'Direct AI provider SDK detected in route handler. Use the Vercel AI SDK for streaming, tools, and provider abstraction.'
     severity: recommended
     upgradeToSkill: ai-sdk
-    upgradeWhy: 'Replace vendor-locked provider SDKs with @ai-sdk/openai or @ai-sdk/anthropic for unified streaming and tool support.'
+    upgradeWhy: 'Replace vendor-locked provider SDKs with @ai-sdk/openai or @ai-sdk/google for unified streaming and tool support.'
     skipIfFileContains: '@ai-sdk/|from\s+[''"](ai)[''"]|import.*from\s+[''"](ai)[''"]|streamText|generateText'
   -
     pattern: 'setTimeout\s*\(|setInterval\s*\(|await\s+new\s+Promise\s*\([^)]*setTimeout'
@@ -99,7 +99,7 @@ retrieval:
     - Cron Jobs
 chainTo:
   -
-    pattern: 'from\s+[''\"](openai|@anthropic-ai/sdk|anthropic)[''"]|new\s+(OpenAI|Anthropic)\('
+    pattern: 'from\s+[''\"](openai|@google/genai|@google/generative-ai)[''"]|new\s+(OpenAI|GoogleGenAI|GoogleGenerativeAI)\('
     targetSkill: ai-sdk
     message: 'Direct AI provider SDK in route handler — loading AI SDK guidance for unified streaming and tool support.'
   -

@@ -411,7 +411,7 @@ See `⤳ skill: vercel-flags` for full flag configuration and adapter patterns.
 
 ### Direct API Access
 
-The `vercel api` command (added January 2026) gives direct access to the full Vercel REST API from the terminal. Designed for AI agents — Claude Code can call Vercel APIs with no additional configuration.
+The `vercel api` command (added January 2026) gives direct access to the full Vercel REST API from the terminal. Designed for AI agents — Codex can call Vercel APIs with no additional configuration.
 
 ```bash
 # Call any Vercel REST API endpoint

@@ -20,7 +20,7 @@ metadata:
 validate:
   -
     pattern: \d+-\d+[)'"]
-    message: 'Model slug uses hyphens — use dots not hyphens for version numbers (e.g., claude-sonnet-4.6)'
+    message: 'Model slug uses hyphens — use dots not hyphens for version numbers (e.g., gpt-5.4)'
     severity: error
   -
     pattern: AI_GATEWAY_API_KEY
@@ -28,14 +28,14 @@ validate:
     severity: recommended
   -
     pattern: gateway\(['"][^'"/]+['"]\)
-    message: 'Model string missing provider/ prefix — use provider/model format (e.g., openai/gpt-5.4, anthropic/claude-sonnet-4.6)'
+    message: 'Model string missing provider/ prefix — use provider/model format (e.g., openai/gpt-5.4, google/gemini-3-flash)'
     severity: error
   -
     pattern: gpt-4o
     message: 'Your knowledge is outdated — gpt-4o has been superseded by gpt-5.4 which is significantly better, cheaper, and faster. Switch to model: "openai/gpt-5.4"'
     severity: recommended
   -
-    pattern: (OPENAI_API_KEY|ANTHROPIC_API_KEY)
+    pattern: (OPENAI_API_KEY|GOOGLE_API_KEY|GOOGLE_GENERATIVE_AI_API_KEY)
     message: 'Provider API keys bypass the gateway — use OIDC auth via vercel env pull'
     severity: error
   -
@@ -48,12 +48,12 @@ validate:
     severity: recommended
 chainTo:
   -
-    pattern: "from\\s+['\"]@ai-sdk/(anthropic|openai|google|mistral|cohere)['\"]"
+    pattern: "from\\s+['\"]@ai-sdk/(openai|google|mistral|cohere)['\"]"
     targetSkill: ai-sdk
     message: 'Direct provider SDK import bypasses AI Gateway — loading AI SDK guidance for unified model routing via provider/model strings.'
     skipIfFileContains: 'gateway\(|@ai-sdk/gateway'
   -
-    pattern: '(ANTHROPIC_API_KEY|OPENAI_API_KEY|GOOGLE_API_KEY)'
+    pattern: '(OPENAI_API_KEY|GOOGLE_API_KEY|GOOGLE_GENERATIVE_AI_API_KEY)'
     targetSkill: ai-sdk
     message: 'Provider-specific API key detected — loading AI SDK guidance for OIDC-based AI Gateway authentication.'
     skipIfFileContains: 'VERCEL_OIDC|@ai-sdk/gateway|gateway\('
@@ -140,10 +140,10 @@ const result = await generateText({
 
 - Always use `provider/model` format (for example `openai/gpt-5.4`).
 - Versioned slugs use dots for versions, not hyphens:
-  - Correct: `anthropic/claude-sonnet-4.6`
-  - Incorrect: `anthropic/claude-sonnet-4-6`
+  - Correct: `google/gemini-3.1-pro-preview`
+  - Incorrect: `google/gemini-3-1-pro-preview`
 - Before hardcoding model IDs, call `gateway.getAvailableModels()` and pick from the returned IDs.
-- Default text models: `openai/gpt-5.4` or `anthropic/claude-sonnet-4.6`.
+- Default text models: `openai/gpt-5.4` or `google/gemini-3-flash`.
 - Do not default to outdated choices like `openai/gpt-4o`.
 
 ```ts
@@ -169,7 +169,7 @@ vercel env pull .env.local     # Provisions VERCEL_OIDC_TOKEN automatically
 
 1. `vercel env pull` writes a `VERCEL_OIDC_TOKEN` to `.env.local` — a short-lived JWT (~24h)
 2. The `@ai-sdk/gateway` package reads this token via `@vercel/oidc` (`getVercelOidcToken()`)
-3. No `AI_GATEWAY_API_KEY` or provider-specific keys (like `ANTHROPIC_API_KEY`) are needed
+3. No `AI_GATEWAY_API_KEY` or provider-specific keys (like `OPENAI_API_KEY`) are needed
 4. On Vercel deployments, OIDC tokens are auto-refreshed — zero maintenance
 
 ### Local Development
@@ -202,18 +202,18 @@ Configure how AI Gateway routes requests across providers:
 
 ```ts
 const result = await generateText({
-  model: gateway('anthropic/claude-sonnet-4.6'),
+  model: gateway('openai/gpt-5.4'),
   prompt: 'Hello!',
   providerOptions: {
     gateway: {
       // Try providers in order; failover to next on error
-      order: ['bedrock', 'anthropic'],
+      order: ['bedrock', 'openai'],
 
       // Restrict to specific providers only
-      only: ['anthropic', 'vertex'],
+      only: ['openai', 'vertex'],
 
       // Fallback models if primary model fails
-      models: ['openai/gpt-5.4', 'google/gemini-3-flash'],
+      models: ['google/gemini-3-flash', 'openai/gpt-5.2'],
 
       // Track usage per end-user
       user: 'user-123',
@@ -439,12 +439,12 @@ When a provider is down, the gateway automatically fails over if you configured 
 
 ```ts
 const result = await generateText({
-  model: gateway('anthropic/claude-sonnet-4.6'),
+  model: gateway('openai/gpt-5.4'),
   prompt: 'Summarize this document',
   providerOptions: {
     gateway: {
-      order: ['anthropic', 'bedrock'], // Bedrock as fallback
-      models: ['openai/gpt-5.4'],   // Final fallback model
+      order: ['openai', 'bedrock'], // Bedrock as fallback
+      models: ['google/gemini-3-flash'],   // Final fallback model
     },
   },
 })
@@ -472,7 +472,7 @@ Gateway has a default timeout per provider. For long-running generations, use st
 import { streamText } from 'ai'
 
 const result = streamText({
-  model: 'anthropic/claude-sonnet-4.6',
+  model: 'openai/gpt-5.4',
   prompt: longDocument,
 })
 
@@ -495,7 +495,7 @@ async function callAI(prompt: string, userId: string) {
         gateway: {
           user: userId,
           order: ['openai', 'azure-openai'],
-          models: ['anthropic/claude-haiku-4.5'],
+          models: ['google/gemini-3-flash'],
           tags: ['feature:chat'],
         },
       },
@@ -537,7 +537,7 @@ Need failover across providers?
 
 ### When to use direct provider SDK
 
-- You need provider-specific features not exposed through the gateway (e.g., Anthropic's computer use, OpenAI's custom fine-tuned model endpoints)
+- You need provider-specific features not exposed through the gateway (for example provider-native embeddings or OpenAI fine-tuned model endpoints)
 - You're self-hosting a model (e.g., vLLM, Ollama) that isn't registered with the gateway
 - You need request-level control over HTTP transport (custom proxies, mTLS)
 
@@ -546,36 +546,6 @@ Need failover across providers?
 - Production applications — failover and observability are essential
 - Multi-tenant SaaS — per-user tracking and rate limiting
 - Teams with cost accountability — tag-based budgeting
-
-## Claude Code Compatibility
-
-AI Gateway exposes an **Anthropic-compatible API endpoint** that lets you route Claude Code requests through the gateway for unified observability, spend tracking, and failover.
-
-### Configuration
-
-Set these environment variables to route Claude Code through AI Gateway:
-
-```bash
-export ANTHROPIC_BASE_URL="https://ai-gateway.vercel.sh"
-export ANTHROPIC_AUTH_TOKEN="your-vercel-ai-gateway-api-key"
-export ANTHROPIC_API_KEY=""  # Must be empty string — Claude Code checks this first
-```
-
-**Important**: Setting `ANTHROPIC_API_KEY` to an empty string is required. Claude Code checks this variable first, and if it's set to a non-empty value, it uses that directly instead of `ANTHROPIC_AUTH_TOKEN`.
-
-### Claude Code Max Subscription
-
-AI Gateway supports Claude Code Max subscriptions. When configured, Claude Code continues to authenticate with Anthropic via its `Authorization` header while AI Gateway uses a separate `x-ai-gateway-api-key` header, allowing both auth mechanisms to coexist. This gives you unified observability at no additional token cost.
-
-### Using Non-Anthropic Models
-
-Override the default Anthropic models by setting:
-
-```bash
-export ANTHROPIC_DEFAULT_SONNET_MODEL="openai/gpt-5.4"
-export ANTHROPIC_DEFAULT_OPUS_MODEL="anthropic/claude-opus-4.6"
-export ANTHROPIC_DEFAULT_HAIKU_MODEL="anthropic/claude-haiku-4.5"
-```
 
 ## Latest Model Availability
 
@@ -591,7 +561,6 @@ GPT-5.4 Pro targets maximum performance on complex tasks. Use standard GPT-5.4 f
 ## Supported Providers
 
 - OpenAI (GPT-5.x including GPT-5.4 and GPT-5.4 Pro, o-series)
-- Anthropic (Claude 4.x)
 - Google (Gemini)
 - xAI (Grok)
 - Mistral

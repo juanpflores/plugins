@@ -420,7 +420,7 @@ chainTo:
     message: 'Workflow with chat UI detected — loading AI Elements for streaming-aware MessageResponse and Conversation rendering.'
     skipIfFileContains: 'ai-elements|MessageResponse|<Message\b'
   -
-    pattern: 'process\.env\.(OPENAI_API_KEY|ANTHROPIC_API_KEY)|from\s+[''"]@ai-sdk/(anthropic|openai)[''""]'
+    pattern: 'process\.env\.(OPENAI_API_KEY|GOOGLE_API_KEY|GOOGLE_GENERATIVE_AI_API_KEY)|from\s+[''"]@ai-sdk/(google|openai)[''""]'
     targetSkill: ai-gateway
     message: 'Direct provider API key in workflow — loading AI Gateway guidance for OIDC auth (required for WDK AI steps).'
     skipIfFileContains: 'gateway\(|@ai-sdk/gateway|VERCEL_OIDC'
@@ -890,7 +890,7 @@ export async function researchAgent(topic: string) {
   "use workflow";
 
   const agent = new DurableAgent({
-    model: "anthropic/claude-sonnet-4-5",
+    model: "openai/gpt-5.4",
     system: "You are a research assistant.",
     tools: {
       search: {

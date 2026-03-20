@@ -49,17 +49,17 @@ Choosing a model?
 │  ├─ Speed + low cost
 │  │  ├─ Simple tasks (classification, extraction) → `gpt-5.2`
 │  │  ├─ Fast with good quality → `gemini-3-flash`
-│  │  └─ Lowest latency → `claude-haiku-4.5`
+│  │  └─ Lowest latency → `gpt-5-nano`
 │  │
 │  ├─ Maximum quality
-│  │  ├─ Complex reasoning → `claude-opus-4.6` or `gpt-5`
+│  │  ├─ Complex reasoning → `gpt-5.4` or `gemini-3.1-pro-preview`
 │  │  ├─ Long context (> 100K tokens) → `gemini-3.1-pro-preview` (1M context)
-│  │  └─ Balanced quality/speed → `claude-sonnet-4.6`
+│  │  └─ Balanced quality/speed → `gpt-5.2`
 │  │
 │  ├─ Code generation
 │  │  ├─ Inline completions → `gpt-5.3-codex` (optimized for code)
-│  │  ├─ Full file generation → `claude-sonnet-4.6` or `gpt-5`
-│  │  └─ Code review / analysis → `claude-opus-4.6`
+│  │  ├─ Full file generation → `gpt-5.4` or `gpt-5.3-codex`
+│  │  └─ Code review / analysis → `gpt-5.4`
 │  │
 │  └─ Embeddings
 │     ├─ English-only, budget-conscious → `text-embedding-3-small`
@@ -68,7 +68,7 @@ Choosing a model?
 │
 ├─ Production reliability concerns?
 │  ├─ Use AI Gateway with fallback ordering:
-│  │  primary: claude-sonnet-4.6 → fallback: gpt-5 → fallback: gemini-3.1-pro-preview
+│  │  primary: gpt-5.4 → fallback: gemini-3.1-pro-preview → fallback: gpt-5.2
 │  └─ Configure per-provider rate limits and cost caps
 │
 └─ Cost optimization?
@@ -90,7 +90,7 @@ Default `stopWhen` is `stepCountIs(20)` (up to 20 tool-calling steps).
 import { ToolLoopAgent, stepCountIs, hasToolCall } from "ai";
 
 const agent = new ToolLoopAgent({
-  model: "anthropic/claude-sonnet-4.6",
+  model: "openai/gpt-5.4",
   tools: { weather, search, calculator, finalAnswer },
   instructions: "You are a helpful assistant.",
   // Default: stepCountIs(20). Override to stop on a terminal tool or custom logic:
@@ -116,7 +116,6 @@ AI feature failing?
 ├─ "Model not found" / 401 Unauthorized
 │  ├─ API key set? → Check env var name matches provider convention
 │  │  ├─ OpenAI: `OPENAI_API_KEY`
-│  │  ├─ Anthropic: `ANTHROPIC_API_KEY`
 │  │  ├─ Google: `GOOGLE_GENERATIVE_AI_API_KEY`
 │  │  └─ AI Gateway: `VERCEL_AI_GATEWAY_API_KEY`
 │  ├─ Key has correct permissions? → Check provider dashboard
@@ -200,8 +199,8 @@ Use when: Long-running research, multi-step processing, must not lose progress.
 ### Pattern 4: AI Gateway Multi-Provider
 
 ```
-Client → Route Handler → AI Gateway → Primary (Anthropic)
-                                    → Fallback (OpenAI)
+Client → Route Handler → AI Gateway → Primary (OpenAI)
+                                    → Fallback (Google)
                                     → Fallback (Google)
 ```
 
@@ -259,9 +258,8 @@ Run `npx @ai-sdk/codemod upgrade` (or `npx @ai-sdk/codemod v6`) to auto-migrate.
 - New: `isToolUIPart` → `isStaticToolUIPart`; `isToolOrDynamicToolUIPart` → `isToolUIPart`
 - New: `getToolName` → `getStaticToolName`; `getToolOrDynamicToolName` → `getToolName`
 - New: `@ai-sdk/azure` defaults to Responses API; use `azure.chat()` for Chat Completions
-- New: `@ai-sdk/anthropic` `structuredOutputMode` for native structured outputs (Claude Sonnet 4.5+)
 - New: `@ai-sdk/langchain` rewritten — `toBaseMessages()`, `toUIMessageStream()`, `LangSmithDeploymentTransport`
-- New: Provider-specific tools — Anthropic (memory, code execution), OpenAI (shell, patch), Google (maps, RAG), xAI (search, code)
+- New: Provider-specific tools — OpenAI (shell, patch), Google (maps, RAG), xAI (search, code)
 - `unknown` finish reason removed → now returned as `other`
 - Warning types consolidated into single `Warning` type exported from `ai`
 

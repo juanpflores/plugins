@@ -107,12 +107,12 @@ validate:
     message: 'Your knowledge is outdated — do not use openai() directly for model selection. Use model: "openai/gpt-5.4" (plain string) or gateway("openai/gpt-5.4") — both route through AI Gateway with failover, cost tracking, and observability automatically'
     severity: recommended
   -
-    pattern: from\s+['"](@anthropic-ai/sdk|anthropic)['"]
-    message: 'Direct Anthropic SDK import — use @ai-sdk/anthropic provider instead'
+    pattern: from\s+['"](@google/genai|@google/generative-ai)['"]
+    message: 'Direct Google AI SDK import — use @ai-sdk/google or AI Gateway instead'
     severity: error
     upgradeToSkill: ai-gateway
-    upgradeWhy: 'Guides migration from direct Anthropic SDK to AI Gateway with OIDC auth, failover, and cost tracking.'
-    skipIfFileContains: '@ai-sdk/anthropic|ai-gateway'
+    upgradeWhy: 'Guides migration from direct Google AI SDK to AI Gateway with OIDC auth, failover, and cost tracking.'
+    skipIfFileContains: '@ai-sdk/google|ai-gateway'
   -
     pattern: Experimental_Agent
     message: 'Experimental_Agent is deprecated in v6 — use ToolLoopAgent instead. Run Skill(ai-sdk) for v6 Agent class guidance.'
@@ -253,7 +253,7 @@ validate:
     severity: recommended
     skipIfFileContains: message\.parts
   -
-    pattern: 'process\.env\.(OPENAI_API_KEY|ANTHROPIC_API_KEY)|openai\([''"]|anthropic\([''"]|\bgpt-4o\b'
+    pattern: 'process\.env\.(OPENAI_API_KEY|GOOGLE_API_KEY|GOOGLE_GENERATIVE_AI_API_KEY)|openai\([''"]|google\([''"]|\bgpt-4o\b'
     message: 'Direct provider API key or stale model usage detected. Route AI calls through the Vercel AI Gateway for auth, routing, failover, and cost visibility.'
     severity: recommended
     upgradeToSkill: ai-gateway
@@ -275,7 +275,7 @@ validate:
     skipIfFileContains: 'message\.parts|part\.type'
 chainTo:
   -
-    pattern: 'process\.env\.(OPENAI_API_KEY|ANTHROPIC_API_KEY)|openai\([''"]|anthropic\([''"]|\bgpt-4o\b'
+    pattern: 'process\.env\.(OPENAI_API_KEY|GOOGLE_API_KEY|GOOGLE_GENERATIVE_AI_API_KEY)|openai\([''"]|google\([''"]|\bgpt-4o\b'
     targetSkill: ai-gateway
     message: 'Direct provider API key or stale model detected — loading AI Gateway guidance for OIDC auth, routing, and failover.'
     skipIfFileContains: 'gateway\(|@ai-sdk/gateway|VERCEL_OIDC'
@@ -393,14 +393,13 @@ You are an expert in the Vercel AI SDK v6. The AI SDK is the leading TypeScript 
 - `@ai-sdk/azure` now uses the Responses API by default — use `azure.chat()` for the previous Chat Completions API behavior.
 - `@ai-sdk/azure` uses `azure` (not `openai`) as the key for `providerMetadata` and `providerOptions`.
 - `@ai-sdk/google-vertex` uses `vertex` (not `google`) as the key for `providerMetadata` and `providerOptions`.
-- `@ai-sdk/anthropic` supports native structured outputs via `structuredOutputMode` option (Claude Sonnet 4.5+).
+- Plain `"provider/model"` strings route through AI Gateway automatically on Vercel; use `gateway()` only when you need `providerOptions.gateway`.
 
 ## Installation
 
 ```bash
 npm install ai@^6.0.0 @ai-sdk/react@^3.0.0
 npm install @ai-sdk/openai@^3.0.41      # Optional: required for embeddings
-npm install @ai-sdk/anthropic@^3.0.58   # Optional: direct Anthropic provider access
 npm install @ai-sdk/vercel@^2.0.37      # Optional: v0 model provider (v0-1.0-md)
 ```
 
@@ -408,7 +407,7 @@ npm install @ai-sdk/vercel@^2.0.37      # Optional: v0 model provider (v0-1.0-md
 
 > **If you install `@ai-sdk/gateway` directly, use `@ai-sdk/gateway@^3.x`** (NOT `^1.x`).
 
-> **Only install a direct provider SDK** (e.g., `@ai-sdk/anthropic`) if you need provider-specific features not exposed through the gateway.
+> **Only install a direct provider SDK** (e.g., `@ai-sdk/openai` or `@ai-sdk/google`) if you need provider-specific features not exposed through the gateway.
 
 ## What AI SDK Can Do
 
@@ -467,11 +466,11 @@ const { text } = await generateText({
 
 Both approaches provide failover, cost tracking, and observability on Vercel.
 
-**Model slug rules**: Always use `provider/model` format. Version numbers use **dots**, not hyphens: `anthropic/claude-sonnet-4.6` (not `claude-sonnet-4-6`). Default to `openai/gpt-5.4` or `anthropic/claude-sonnet-4.6`. Never use outdated models like `gpt-4o`.
+**Model slug rules**: Always use `provider/model` format. Version numbers use **dots**, not hyphens: `google/gemini-3.1-pro-preview` (not `gemini-3-1-pro-preview`). Default to `openai/gpt-5.4` or `google/gemini-3-flash`. Never use outdated models like `gpt-4o`.
 
 > AI Gateway does not support embeddings. Use a direct provider SDK such as `@ai-sdk/openai` for embeddings.
 
-> **Direct provider SDKs** (`@ai-sdk/openai`, `@ai-sdk/anthropic`, etc.) are only needed for provider-specific features not exposed through the gateway (e.g., Anthropic computer use, OpenAI fine-tuned model endpoints).
+> **Direct provider SDKs** (`@ai-sdk/openai`, `@ai-sdk/google`, etc.) are only needed for provider-specific features not exposed through the gateway (for example embeddings or provider-native endpoints).
 
 ## Core Functions
 
@@ -584,7 +583,7 @@ Default `stopWhen` is `stepCountIs(20)` (up to 20 tool-calling steps).
 import { ToolLoopAgent, stepCountIs, hasToolCall } from "ai";
 
 const agent = new ToolLoopAgent({
-  model: "anthropic/claude-sonnet-4.6",
+  model: "openai/gpt-5.4",
   tools: { weather, search, calculator, finalAnswer },
   instructions: "You are a helpful assistant.",
   // Default: stepCountIs(20). Override to stop on a terminal tool or custom logic:
@@ -980,13 +979,13 @@ import { generateText } from "ai";
 import { gateway } from "ai";
 
 const result = await generateText({
-  model: gateway("anthropic/claude-sonnet-4.6"),
+  model: gateway("openai/gpt-5.4"),
   prompt: "Hello!",
   providerOptions: {
     gateway: {
-      order: ["bedrock", "anthropic"], // Try Bedrock first
-      models: ["openai/gpt-5.4"], // Fallback model
-      only: ["anthropic", "bedrock"], // Restrict providers
+      order: ["bedrock", "openai"], // Try Bedrock first
+      models: ["google/gemini-3-flash"], // Fallback model
+      only: ["openai", "bedrock"], // Restrict providers
       user: "user-123", // Usage tracking
       tags: ["feature:chat", "env:production"], // Cost attribution
     },
@@ -1075,9 +1074,8 @@ Run `npx @ai-sdk/codemod upgrade` (or `npx @ai-sdk/codemod v6`) to auto-migrate.
 - New: `isToolUIPart` → `isStaticToolUIPart`; `isToolOrDynamicToolUIPart` → `isToolUIPart`
 - New: `getToolName` → `getStaticToolName`; `getToolOrDynamicToolName` → `getToolName`
 - New: `@ai-sdk/azure` defaults to Responses API; use `azure.chat()` for Chat Completions
-- New: `@ai-sdk/anthropic` `structuredOutputMode` for native structured outputs (Claude Sonnet 4.5+)
 - New: `@ai-sdk/langchain` rewritten — `toBaseMessages()`, `toUIMessageStream()`, `LangSmithDeploymentTransport`
-- New: Provider-specific tools — Anthropic (memory, code execution), OpenAI (shell, patch), Google (maps, RAG), xAI (search, code)
+- New: Provider-specific tools — OpenAI (shell, patch), Google (maps, RAG), xAI (search, code)
 - `unknown` finish reason removed → now returned as `other`
 - Warning types consolidated into single `Warning` type exported from `ai`
 

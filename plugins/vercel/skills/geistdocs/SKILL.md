@@ -267,7 +267,7 @@ Auto-translate: `pnpm translate [--pattern "path/**/*.mdx"] [--config file.tsx] 
 Auto-generated at `/rss.xml`. Requires `NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL` and `title` export. Customize via frontmatter `lastModified: 2025-11-12`.
 
 ### .md Extension (Raw Markdown)
-Append `.md` or `.mdx` to any URL to get raw Markdown. Useful for AI chat platforms (ChatGPT, Claude, Cursor) and LLM context ingestion.
+Append `.md` or `.mdx` to any URL to get raw Markdown. Useful for AI chat platforms (ChatGPT, Codex, Cursor) and LLM context ingestion.
 
 ### llms.txt
 Endpoint at `/llms.txt` returns ALL documentation as plain Markdown in a single response. Follows the llms.txt standard.
@@ -276,7 +276,7 @@ Endpoint at `/llms.txt` returns ALL documentation as plain Markdown in a single 
 AI chat assistant using `openai/gpt-4.1-mini` via Vercel AI Gateway. Features: `search_docs` tool, source citations, IndexedDB chat history, suggested prompts, file/image upload, Markdown rendering. Access via navbar button or `⌘I` / `Ctrl+I`.
 
 ### Open in Chat
-Button in ToC sidebar opens docs page in external AI platforms (Cursor, v0, ChatGPT, Claude).
+Button in ToC sidebar opens docs page in external AI platforms (Cursor, v0, ChatGPT, Codex).
 
 ## Deployment
 

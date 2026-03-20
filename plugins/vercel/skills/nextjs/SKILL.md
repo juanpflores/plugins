@@ -185,7 +185,7 @@ chainTo:
     targetSkill: vercel-storage
     message: 'Sunset storage package detected — loading Vercel Storage guidance for Neon/Upstash migration.'
   -
-    pattern: "from\\s+['\"]@ai-sdk/(anthropic|openai)['\"]"
+    pattern: "from\\s+['\"]@ai-sdk/(google|openai)['\"]"
     targetSkill: ai-gateway
     message: 'Direct AI provider SDK import — loading AI Gateway guidance for unified model routing with failover and cost tracking.'
   -
@@ -201,7 +201,7 @@ chainTo:
     targetSkill: runtime-cache
     message: 'In-process cache detected — loading Runtime Cache guidance for serverless-compatible caching.'
   -
-    pattern: 'fetch\s*\(\s*[''""](https?://)?(api\.openai\.com|api\.anthropic\.com|api\.cohere\.ai)'
+    pattern: 'fetch\s*\(\s*[''""](https?://)?(api\.openai\.com|generativelanguage\.googleapis\.com|api\.cohere\.ai)'
     targetSkill: ai-gateway
     message: 'Raw AI provider fetch URL detected — loading AI Gateway guidance for unified routing, failover, and OIDC auth.'
     skipIfFileContains: '@ai-sdk/|from\s+[''""](ai)[''""]|ai-gateway|gateway\('
@@ -322,7 +322,7 @@ When running `create-next-app`, **always** pass `--yes` to skip interactive prom
 npx create-next-app@latest my-app --yes --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --turbopack --use-npm
 ```
 
-**If the target directory contains ANY non-Next.js files** (`.claude/`, `CLAUDE.md`, `.git/`, config files, etc.), you **MUST** add `--force`. Without it, `create-next-app` will fail with "The directory contains files that could conflict" and block scaffolding. **Check the directory first** — if it has anything in it, use `--force`:
+**If the target directory contains ANY non-Next.js files** (`.codex/`, `AGENTS.md`, `.git/`, config files, etc.), you **MUST** add `--force`. Without it, `create-next-app` will fail with "The directory contains files that could conflict" and block scaffolding. **Check the directory first** — if it has anything in it, use `--force`:
 
 ```bash
 npx create-next-app@latest . --yes --force --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --turbopack --use-npm

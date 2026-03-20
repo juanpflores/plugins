@@ -242,7 +242,7 @@ export async function POST(req: Request) {
   const modelMessages = await convertToModelMessages(messages)
 
   const result = streamText({
-    model: gateway('anthropic/claude-sonnet-4.6'),
+    model: gateway('openai/gpt-5.4'),
     messages: modelMessages,
   })
 

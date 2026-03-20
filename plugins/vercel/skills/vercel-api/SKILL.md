@@ -14,7 +14,7 @@ metadata:
     - '\bpnpm\s+(install|i|add)\s+[^\n]*@vercel/sdk\b'
     - '\bbun\s+(install|i|add)\s+[^\n]*@vercel/sdk\b'
     - '\byarn\s+add\s+[^\n]*@vercel/sdk\b'
-    - '\bclaude\s+mcp\s+add\b[^\n]*\bvercel\b'
+    - '\bcodex\s+mcp\s+add\b[^\n]*\bvercel\b'
     - '\bmcp\.vercel\.com\b'
 retrieval:
   aliases:
@@ -39,7 +39,7 @@ chainTo:
     targetSkill: deployments-cicd
     message: 'Vercel SDK deployment/project operations detected — loading CI/CD guidance for deployment workflows, preview URLs, and promotion strategies.'
   -
-    pattern: 'mcp\.vercel\.com|claude\s+mcp\s+add.*vercel'
+    pattern: 'mcp\.vercel\.com|codex\s+mcp\s+add.*vercel'
     targetSkill: ai-sdk
     message: 'Vercel MCP server configuration detected — loading AI SDK guidance for MCP client integration and tool calling patterns.'
 
@@ -51,7 +51,7 @@ You are an expert in the Vercel platform APIs. This plugin bundles a connection 
 
 ## MCP Server (Public Beta)
 
-The plugin's `.mcp.json` configures the official Vercel MCP server using Streamable HTTP transport with OAuth authentication. The MCP server is in **public beta** — read-only in the initial release. Write operations are on the roadmap. Supported clients: Claude, Cursor, and VS Code.
+The plugin's `.mcp.json` configures the official Vercel MCP server using Streamable HTTP transport with OAuth authentication. The MCP server is in **public beta** — read-only in the initial release. Write operations are on the roadmap. Supported clients include Codex, Cursor, and VS Code.
 
 ### Connection
 
@@ -262,7 +262,7 @@ const res = await fetch(
 
 ## `vercel api` CLI Command (January 2026)
 
-The `vercel api` command gives agents direct access to the full Vercel REST API from the terminal with no additional configuration. It uses the CLI's existing authentication, so agents like Claude Code can call any endpoint immediately.
+The `vercel api` command gives agents direct access to the full Vercel REST API from the terminal with no additional configuration. It uses the CLI's existing authentication, so agents like Codex can call any endpoint immediately.
 
 ```bash
 # Call any REST endpoint directly

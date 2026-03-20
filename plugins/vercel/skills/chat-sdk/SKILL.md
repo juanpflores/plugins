@@ -130,7 +130,7 @@ chainTo:
     message: 'Long-running or polling logic in chat bot — loading Workflow DevKit for durable execution that survives deploys.'
     skipIfFileContains: 'use workflow|from\s+[''"]workflow[''"]'
   -
-    pattern: 'process\.env\.(OPENAI_API_KEY|ANTHROPIC_API_KEY)|from\s+[''"]@ai-sdk/(anthropic|openai)[''""]'
+    pattern: 'process\.env\.(OPENAI_API_KEY|GOOGLE_API_KEY|GOOGLE_GENERATIVE_AI_API_KEY)|from\s+[''"]@ai-sdk/(google|openai)[''""]'
     targetSkill: ai-gateway
     message: 'Direct provider API key in chat bot — loading AI Gateway guidance for OIDC auth and model routing.'
     skipIfFileContains: 'gateway\(|@ai-sdk/gateway'

@@ -44,7 +44,7 @@ chainTo:
     targetSkill: auth
     message: 'Auth library detected during bootstrap — loading Auth guidance for Clerk Marketplace setup and middleware patterns.'
   -
-    pattern: 'OPENAI_API_KEY|ANTHROPIC_API_KEY|AI_GATEWAY'
+    pattern: 'OPENAI_API_KEY|GOOGLE_API_KEY|GOOGLE_GENERATIVE_AI_API_KEY|AI_GATEWAY'
     targetSkill: env-vars
     message: 'AI provider env vars detected — loading Environment Variables guidance for OIDC-based auth via vercel env pull.'
     skipIfFileContains: 'VERCEL_OIDC|vercel env pull'

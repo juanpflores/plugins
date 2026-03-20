@@ -3,8 +3,6 @@ name: agent-browser-verify
 description: Automated browser verification for dev servers. Triggers when a dev server starts to run a visual gut-check with agent-browser — verifies the page loads, checks for console errors, validates key UI elements, and reports pass/fail before continuing.
 metadata:
   priority: 2
-  docs:
-    - "https://docs.anthropic.com/en/docs/claude-code/sub-agents"
   pathPatterns: []
   bashPatterns:
     - '\bnext\s+dev\b'

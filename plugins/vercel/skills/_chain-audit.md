@@ -123,7 +123,7 @@ These validate rules detect antipatterns in written files and suggest loading a 
 | 7 | **vercel-functions** | `ai-sdk` | `from 'openai'`, `generateObject`, `toDataStreamResponse` | Direct SDK + v5 API detection in route handlers |
 | 8 | **nextjs** | `auth` | `next-auth`, `getServerSession`, JWT handling | Legacy auth detection |
 | 9 | **vercel-cli** | `routing-middleware` | `vercel.json` redirects/rewrites | Very frequent config pattern |
-| 10 | **nextjs** | `ai-gateway` | `@ai-sdk/(openai|anthropic)`, raw AI fetch URLs | Direct provider SDK bypass |
+| 10 | **nextjs** | `ai-gateway` | `@ai-sdk/(openai|google)`, raw AI fetch URLs | Direct provider SDK bypass |
 
 ---
 
@@ -146,7 +146,7 @@ A dedicated `posttooluse-bash-chain.mts` hook matches the `Bash` tool and detect
 | `@vercel/postgres` | vercel-storage | Sunset package → Neon migration |
 | `@vercel/kv` | vercel-storage | Sunset package → Upstash migration |
 | `openai` | ai-gateway | Direct OpenAI SDK → AI Gateway |
-| `@anthropic-ai/sdk` | ai-gateway | Direct Anthropic SDK → AI Gateway |
+| `@google/genai` | ai-gateway | Direct Google SDK → AI Gateway |
 | `@google/generative-ai` | ai-gateway | Direct Google AI → AI Gateway |
 | `langchain` | ai-sdk | LangChain → AI SDK v6 |
 | `@langchain/core` | ai-sdk | LangChain Core → AI SDK v6 |

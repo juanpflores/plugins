@@ -65,7 +65,7 @@ retrieval:
     - add infinite scrolling to load more items
 chainTo:
   -
-    pattern: 'from\s+[''\"](openai|@anthropic-ai/sdk|anthropic)[''"]|new\s+(OpenAI|Anthropic)\('
+    pattern: 'from\s+[''\"](openai|@google/genai|@google/generative-ai)[''"]|new\s+(OpenAI|GoogleGenAI|GoogleGenerativeAI)\('
     targetSkill: ai-sdk
     message: 'Direct AI provider SDK detected alongside SWR — loading AI SDK guidance for unified streaming and provider-agnostic patterns.'
   -

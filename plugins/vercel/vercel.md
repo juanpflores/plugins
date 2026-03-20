@@ -228,7 +228,6 @@ AI SDK (v6, TypeScript)                    ⤳ skill: ai-sdk  📖 docs: https:/
 │
 ├── Providers (Global Provider System: "provider/model")
 │   ⊃ @ai-sdk/openai (GPT-5.x, o-series)
-│   ⊃ @ai-sdk/anthropic (Claude 4.x)
 │   ⊃ @ai-sdk/google (Gemini)
 │   ⊃ @ai-sdk/amazon-bedrock
 │   ⊃ @ai-sdk/azure
@@ -281,7 +280,7 @@ AI GATEWAY                                 ⤳ skill: ai-gateway  📖 docs: htt
 │   ⊃ DALL-E, gemini-2.x image models are outdated — use Gemini 3.1 Flash Image Preview
 │
 ├── Supported Providers
-│   ⊃ OpenAI, Anthropic, Google, Meta, xAI, Mistral
+│   ⊃ OpenAI, Google, Meta, xAI, Mistral
 │   ⊃ DeepSeek, Amazon Bedrock, Cohere, Perplexity, Alibaba
 │   └── 100+ models total
 │
@@ -717,7 +716,7 @@ VERCEL MCP SERVER (Official)                ⤳ skill: vercel-api  📖 docs: ht
 │   ⊃ View team members and settings
 │
 ├── Supported AI Clients
-│   ⊃ Claude Code (`claude mcp add --transport http vercel https://mcp.vercel.com`)
+│   ⊃ Codex (`codex mcp add vercel --url https://mcp.vercel.com`)
 │   ⊃ Cursor, VS Code (reviewed and approved clients)
 │
 └── Relationship to REST API
@@ -809,14 +808,14 @@ VERCEL MARKETPLACE                          ⤳ skill: marketplace  📖 docs: h
 | Structured data extraction | AI SDK `generateText` + `Output.object()` + AI Gateway | Type-safe, schema-validated |
 | Multi-step agent | AI SDK `Agent` class + AI Gateway | Loop control, tool calling |
 | Production agent (must not lose state) | Workflow DevKit `DurableAgent` | Survives crashes, observable |
-| Provider-specific features (e.g., computer use) | Direct provider SDK (`@ai-sdk/anthropic`) | Only when gateway doesn't expose the feature |
+| Provider-specific features (e.g., fine-tuned endpoints) | Direct provider SDK (`@ai-sdk/openai`) | Only when gateway doesn't expose the feature |
 | Connect to external tools | AI SDK MCP Client | Standard protocol, OAuth |
 | Agent needs live Vercel state | Vercel MCP Server | Read projects, deployments, logs via MCP |
 | Multi-platform chat bot (Slack, Teams, Discord, Telegram, etc.) | Chat SDK (`chat` + `@chat-adapter/*`) | Single codebase, unified API, cards, streaming |
 | Chat bot with AI responses | Chat SDK + AI SDK (`thread.post(textStream)`) | Streaming AI across all platforms |
 | UI generation from prompts | v0 | Visual output, GitHub integration |
 
-**IMPORTANT**: Default to AI Gateway for all AI features. Only use direct provider SDKs (`@ai-sdk/anthropic`, `@ai-sdk/openai`, etc.) when you need provider-specific features not exposed through the gateway.
+**IMPORTANT**: Default to AI Gateway for all AI features. Only use direct provider SDKs (`@ai-sdk/openai`, `@ai-sdk/google`, etc.) when you need provider-specific features not exposed through the gateway.
 
 ### Storage
 | Need | Use | Why |
@@ -897,7 +896,7 @@ Three distinct caching systems serve different purposes. They can be used indepe
 3. vercel env pull (pulls VERCEL_OIDC_TOKEN + gateway env vars to .env.local)
 4. npm install ai @ai-sdk/react (core SDK + React hooks — `@ai-sdk/react` is required for `useChat`)
 5. npx ai-elements (install chat UI components — Message, Conversation, PromptInput)
-6. Code: model: 'anthropic/claude-sonnet-4.6' (plain string routes through AI Gateway automatically)
+6. Code: model: 'openai/gpt-5.4' (plain string routes through AI Gateway automatically)
 7. Server: convertToModelMessages(messages) → streamText → toUIMessageStreamResponse()
 8. Client: useChat({ transport: new DefaultChatTransport({ api: '/api/chat' }) })
 9. Next.js (App Router) → AI SDK + AI Elements → AI Gateway (OIDC auth)
@@ -984,7 +983,7 @@ Git Push → CI Pipeline → vercel build → vercel deploy --prebuilt
 | `handleSubmit` / `input` | `sendMessage({ text })` / own state | v6 chat hook API |
 | `toDataStreamResponse()` | `toUIMessageStreamResponse()` | For chat UIs with useChat |
 | `message.content` | `message.parts` iteration | UIMessage format (text, tool-*, reasoning) |
-| Manual API keys (`ANTHROPIC_API_KEY`) | OIDC via `vercel env pull` | Auto-provisioned, no secrets to manage |
+| Manual API keys (`OPENAI_API_KEY`) | OIDC via `vercel env pull` | Auto-provisioned, no secrets to manage |
 | `agent.generateText()` | `agent.generate()` | Simplified Agent API |
 | `agent.streamText()` | `agent.stream()` | Simplified Agent API |
 | `isLoading` (useChat) | `status === "streaming" \|\| status === "submitted"` | v6 status enum |
@@ -1026,10 +1025,10 @@ Git Push → CI Pipeline → vercel build → vercel deploy --prebuilt
 
 ### AI SDK v6
 
-- **Default to AI Gateway** — pass `"provider/model"` strings directly (e.g., `model: 'anthropic/claude-sonnet-4.6'`) — they route through the AI Gateway automatically. The `gateway()` wrapper from `'ai'` is optional and only needed when using `providerOptions.gateway` for routing/failover/tags. Do NOT install or import direct provider SDKs (`@ai-sdk/anthropic`, `@ai-sdk/openai`, etc.) unless you need provider-specific features not exposed through the gateway.
+- **Default to AI Gateway** — pass `"provider/model"` strings directly (e.g., `model: 'openai/gpt-5.4'`) — they route through the AI Gateway automatically. The `gateway()` wrapper from `'ai'` is optional and only needed when using `providerOptions.gateway` for routing/failover/tags. Do NOT install or import direct provider SDKs (`@ai-sdk/openai`, `@ai-sdk/google`, etc.) unless you need provider-specific features not exposed through the gateway.
 - **Install `@ai-sdk/react` for React hooks** — `useChat`, `useCompletion`, and `useObject` live in `@ai-sdk/react` (not `ai`). Always `npm install ai @ai-sdk/react` together for React/Next.js projects.
 - **OIDC is the default auth for AI Gateway** — when you run `vercel env pull`, it provisions `VERCEL_OIDC_TOKEN` which the `@ai-sdk/gateway` package reads automatically via `@vercel/oidc`. No `AI_GATEWAY_API_KEY` or provider-specific API keys needed. On Vercel deployments, OIDC tokens are auto-refreshed. For local dev, re-run `vercel env pull` if the token expires (~24h).
-- **For AI projects, set up a Vercel project first** — run `vercel link` (or create via dashboard) → enable AI Gateway in dashboard → `vercel env pull` to get OIDC credentials locally. Do NOT manually create `.env.local` with provider-specific API keys like `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`.
+- **For AI projects, set up a Vercel project first** — run `vercel link` (or create via dashboard) → enable AI Gateway in dashboard → `vercel env pull` to get OIDC credentials locally. Do NOT manually create `.env.local` with provider-specific API keys like `OPENAI_API_KEY` or `GOOGLE_GENERATIVE_AI_API_KEY`.
 - **AI Elements is MANDATORY for all AI-generated text** — `npx ai-elements@latest` must be installed immediately after scaffolding. Never render AI text as raw `{text}` or `<p>{content}</p>` — it shows ugly `**`, `##`, `---`. Use `<Message>` for chat with `useChat`, and `<MessageResponse>` (from `@/components/ai-elements/message`) for any other AI markdown (workflow events, reports, briefings, notifications, email previews). `<MessageResponse>` wraps Streamdown with code highlighting, math, mermaid, and CJK plugins.
 - **Server-side: use `convertToModelMessages()` (async) + `toUIMessageStreamResponse()`** — not `toDataStreamResponse()`. Client-side: use `DefaultChatTransport` with `useChat`, not the v5 `api` parameter.
 - Use `inputSchema` (not `parameters`) and `output`/`outputSchema` (not `result`) for tool definitions — aligned with MCP spec.
