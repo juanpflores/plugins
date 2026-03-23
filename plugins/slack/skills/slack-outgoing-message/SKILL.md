@@ -1,6 +1,6 @@
 ---
 name: slack-outgoing-message
-description: Primary skill for composing, drafting, or refining any outbound Slack content. Use this whenever the task will end in `slack_send_message`, `slack_send_message_draft`, or `slack_create_canvas`, including thread summaries rewritten into Slack-ready posts, DMs, replies, status updates, or announcements. Use `slack` to read or analyze Slack context; use this skill to produce the final outgoing message.
+description: Primary skill for composing, drafting, or refining any outbound Slack content. Use this whenever the task will require using `slack_send_message`, `slack_send_message_draft`, or `slack_create_canvas`. Use `slack` to read or analyze Slack context; use this skill to produce the final outgoing message.
 ---
 
 # Slack Outgoing Message
