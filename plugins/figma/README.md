@@ -32,11 +32,6 @@ with this shape:
   - plugin-local MCP dependency manifest
   - bundles the Figma MCP endpoint used by the bundled skills
 
-- `.app.json`
-  - plugin-local app dependency manifest
-  - keeps the public Figma connector wiring explicit alongside the bundled
-    MCP-backed workflows
-
 - `agents/`
   - plugin-level agent metadata
   - currently includes `agents/openai.yaml` for the OpenAI surface
@@ -54,9 +49,9 @@ with this shape:
 
 ## Notes
 
-This plugin is MCP-backed through `.mcp.json` and currently depends on the
-Figma MCP server at `https://mcp.figma.com/mcp`. The bundled skills assume that
-the Figma MCP tools are available and that the user can supply Figma URLs with
+This plugin is MCP-backed through `.mcp.json` and depends on the Figma MCP
+server at `https://mcp.figma.com/mcp`. The bundled skills assume that the
+Figma MCP tools are available and that the user can supply Figma URLs with
 node IDs when needed.
 
 The current skill set is focused on three workflows:
@@ -65,6 +60,6 @@ The current skill set is focused on three workflows:
 - creating Code Connect mappings between published Figma components and code
 - generating durable project rules for future Figma-to-code work
 
-This public repo keeps the older connector wiring in `.app.json` while adding
-the MCP config, bundled skills, and example command or hook scaffolding that
-ship with the richer workflow bundle.
+This repo ships the Figma integration as an MCP-only plugin bundle. The plugin
+manifest points Codex at the bundled skills plus the Figma MCP dependency, and
+does not rely on a separate app or connector definition.
