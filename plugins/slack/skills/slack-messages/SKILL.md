@@ -38,3 +38,5 @@ Read this reference **before finalizing any outgoing Slack text**:
 ## Common Mistakes
 
 - Include `thread_ts` only when replying inside an existing thread and you have the parent message timestamp; otherwise, omit it entirely.
+- Slack draft/send may collapse true blank lines. When you need a visible blank separator, use a line that contains only a zero-width space (`U+200B`, `\u200B`) instead of an empty line.
+- After a bold standalone section label such as `*Latest status*` or `*Timeline*`, add a zero-width-space line (`U+200B`) before the next bullet or paragraph so Slack preserves the section break.
