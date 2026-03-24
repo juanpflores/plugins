@@ -1,0 +1,42 @@
+{
+  "name": "coderabbit",
+  "version": "1.0.0",
+  "description": "Run AI-assisted code review workflows with the CodeRabbit CLI.",
+  "author": {
+    "name": "CodeRabbit",
+    "url": "https://www.coderabbit.ai/"
+  },
+  "homepage": "https://docs.coderabbit.ai/cli",
+  "repository": "https://github.com/openai/plugins",
+  "license": "MIT",
+  "keywords": [
+    "coderabbit",
+    "code-review",
+    "cli",
+    "git",
+    "quality"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "CodeRabbit",
+    "shortDescription": "AI-powered code review for explicit and agent-initiated review workflows",
+    "longDescription": "AI-powered code review using CodeRabbit. Enables developers to implement features, review code, and fix issues in autonomous cycles without manual intervention.",
+    "developerName": "CodeRabbit",
+    "category": "Coding",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://www.coderabbit.ai/",
+    "privacyPolicyURL": "https://www.coderabbit.ai/privacy-policy",
+    "termsOfServiceURL": "https://www.coderabbit.ai/terms-of-service",
+    "defaultPrompt": [
+      "Review the current git changes with CodeRabbit and summarize the highest-risk findings.",
+      "Compare this branch against main with CodeRabbit and turn findings into a short fix list."
+    ],
+    "brandColor": "#FF570A",
+    "composerIcon": "./assets/coderabbit-small.svg",
+    "logo": "./assets/coderabbit.svg",
+    "screenshots": []
+  }
+}
