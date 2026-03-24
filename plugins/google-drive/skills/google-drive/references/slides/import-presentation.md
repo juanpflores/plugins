@@ -35,6 +35,7 @@ If `import_presentation` is unavailable, stop and say the file cannot be convert
 - Use [google-slides](./workflows.md) for general summaries or edits.
 - Use [google-slides-visual-iteration](./visual-iteration.md) for post-import slide formatting cleanup.
 - Use [google-slides-template-migration](./template-migration.md) when the imported deck should move onto a branded template.
+- If import drift requires visible layout cleanup on a slide, follow [visual-change-loop](./visual-change-loop.md) through the third fresh review instead of stopping after one cosmetic pass.
 
 ## Rules
 
