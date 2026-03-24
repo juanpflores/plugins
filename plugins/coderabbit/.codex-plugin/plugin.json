@@ -35,7 +35,7 @@
       "Compare this branch against main with CodeRabbit and turn findings into a short fix list."
     ],
     "brandColor": "#FF570A",
-    "composerIcon": "./assets/coderabbit-small.svg",
+    "composerIcon": "./assets/coderabbit-small.png",
     "logo": "./assets/coderabbit.svg",
     "screenshots": []
   }
