@@ -1,13 +1,13 @@
 {
   "name": "coderabbit",
   "version": "1.0.0",
-  "description": "Run AI-assisted code review workflows with the CodeRabbit CLI.",
+  "description": "Run AI-assisted code review workflows with the locally installed CodeRabbit CLI.",
   "author": {
     "name": "CodeRabbit",
     "url": "https://www.coderabbit.ai/"
   },
   "homepage": "https://docs.coderabbit.ai/cli",
-  "repository": "https://github.com/openai/plugins",
+  "repository": "https://github.com/coderabbitai/skills",
   "license": "MIT",
   "keywords": [
     "coderabbit",
@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "CodeRabbit",
-    "shortDescription": "AI-powered code review for explicit and agent-initiated review workflows",
-    "longDescription": "AI-powered code review using CodeRabbit. Enables developers to implement features, review code, and fix issues in autonomous cycles without manual intervention.",
+    "shortDescription": "AI-powered code review using a locally installed CodeRabbit CLI",
+    "longDescription": "AI-powered code review using CodeRabbit. Verifies that the local CodeRabbit CLI is installed before running review workflows, then supports autonomous implement-review-fix cycles.",
     "developerName": "CodeRabbit",
     "category": "Coding",
     "capabilities": [
