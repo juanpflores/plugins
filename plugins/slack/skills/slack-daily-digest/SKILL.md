@@ -19,38 +19,48 @@ Use this skill to produce a daily digest of today's important Slack activity fro
 3. Named channels: Resolve IDs through `slack_search_channels`, then call `slack_read_channel` for today's window with `limit` at `50` per channel.
 4. Named topics: Use `slack_search_public_and_private` for each topic phrase. If channels were also provided, run one search per topic and channel with `query` set to `<topic phrase> in:<#CHANNEL_ID>` so the search stays inside the selected channels. If no channels were provided, set `query` to the topic phrase. Then read the returned channels with `slack_read_channel` or parent threads with `slack_read_thread` when a result looks important.
 5. Prioritize decisions, blockers, incidents, asks, ownership changes, deadline changes, and status changes.
+6. When a named channel was resolved to a channel ID, render that channel in the final digest as a Slack channel mention like `<#CHANNEL_ID>` instead of plain `#channel-name`, especially in **Scope**.
+7. Read the full `## Formatting Rules` section below.
+8. If the user asked to post or send the digest in Slack, use `../slack-outgoing-message/SKILL.md` and follow the user's explicit intent:
+   - explicit send/post/share: write directly
+   - explicit draft/review-first: create a draft
+   - no Slack delivery request: return the digest in chat
 
-## Formatting
+## Formatting Rules
 
-Format the digest as:
+- For a concise Slack or chat summary, you MUST use exactly this structure unless the user explicitly requests a different format.
+- If you use `../slack-outgoing-message/SKILL.md` to draft or send the final message, this output contract remains binding. The downstream skill does not relax or rename these sections.
 
 ```md
-*Daily Slack Digest — YYYY-MM-DD*
+**Daily Slack Digest - YYYY-MM-DD**
+**Scope**
+- <clickable channel mentions for resolved channels + topics + time window>
+- <coverage note or omitted-channel caveat, if any>
 
-*Scope:* <channels + topics + time window + coverage note>
-*Summary:* <1–2 line overview of volume + key signals>
+**Summary**
+<1-2 sentence summary of volume + key signals>
 
-*Details (by <channel|topic>)*
-*<Group 1>*
+**Topic: <group 1>**
 - ...
 - ...
 
-*<Group 2>*
+**Topic: <group 2>**
 - ...
 - ...
 
-*Needs attention*
+**Needs attention**
 - ...
 
-*Notes*
+**Notes**
 - <gaps, absences, or caveats>
 ```
 
+- Group the digest by topic or channel, whichever better matches the request.
 - Use short group headers and keep each group to 1–3 bullets.
 - Keep the digest compact; aim for 4–10 bullets total across all sections.
 - Start each bullet with the key update, then add implication, owner, blocker, or action if relevant.
 - If grouping by topic, include the channel when helpful.
 - If grouping by channel, include the topic when helpful.
-- Preserve exact channel names.
-- Include *Needs attention* only for items requiring user action, decisions, or input.
-- Include *Notes* for gaps, absences, sparse results, or caveats.
+- For resolved channels, prefer Slack channel mentions like `<#CHANNEL_ID>` so the names are clickable. Use plain text only when you do not have a channel ID.
+- Include **Needs attention** only for items requiring user action, decisions, or input.
+- Include **Notes** for gaps, absences, sparse results, or caveats.
